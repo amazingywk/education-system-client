@@ -1,16 +1,19 @@
 <template>
     <div class="home-admin">
         <navbar />
+        <postcard />
         <div style="display: flex;">
-            <div class="main" ref="pieRef"></div>
-            <div class="main" ref="barRef"></div>
+            <div class="pie" ref="pieRef"></div>
+            <div class="bar" ref="barRef"></div>
+            <div class="line" ref="lineRef"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { defineComponent, onBeforeMount, ref, onMounted, reactive } from 'vue'
+import { defineComponent, onBeforeMount, ref, onMounted, reactive, toRefs } from 'vue'
 import Navbar from '@/components/navbar.vue'
+import Postcard from '@/components/postcard.vue'
 import * as echarts from 'echarts';
 import { getUserNum } from '@/api/user'
 import { getSystemNum } from '@/api/class'
@@ -19,12 +22,14 @@ export default defineComponent({
     name:'HomeAdmin',
 
     components:{
-        Navbar
+        Navbar,
+        Postcard,
     },
 
     setup() {
         const pieRef = ref()
         const barRef = ref()
+        const lineRef = ref()
 
         const state = reactive({
             data: {
@@ -33,7 +38,7 @@ export default defineComponent({
                 guest: 0,
                 classNum: 0,
                 course: 0,
-            }
+            },
         })
 
         onBeforeMount(() => {
@@ -45,10 +50,12 @@ export default defineComponent({
             const { data: { teacher, student, guest } } = await getUserNum()
             const { data: { classNum, course } } = await getSystemNum()
 
+
             state.data = { teacher, student, guest, classNum, course }
 
-            var pieChart = echarts.init(pieRef.value)
-            var barChart = echarts.init(barRef.value)
+            const pieChart = echarts.init(pieRef.value)
+            const barChart = echarts.init(barRef.value)
+            const lineChart = echarts.init(lineRef.value)
 
             const pie = {
                 series: [
@@ -73,7 +80,7 @@ export default defineComponent({
                     },
                 ]
             }
-            var bar = {
+            const bar = {
                 title: {
                     text: '系统统计'
                 },
@@ -90,23 +97,49 @@ export default defineComponent({
                     }
                 ]
             }
+            const line = {
+                xAxis: {
+                    data: ['A', 'B', 'C', 'D', 'E']
+                },
+                yAxis: {},
+                series: [
+                    {
+                        data: [10, 22, 28, 43, 49],
+                        type: 'line',
+                        stack: 'x',
+                        smooth: true,
+                    },
+                    {
+                        data: [5, 4, 3, 5, 10],
+                        type: 'line',
+                        stack: 'x',
+                        smooth: true,
+                    }
+                ]
+            }
             pieChart.setOption(pie)
             barChart.setOption(bar)
+            lineChart.setOption(line)
         })
 
         return {
+            ...toRefs(state),
             pieRef,
             barRef,
+            lineRef,
         }
     },
 })
 </script>
 
 <style lang="less" scoped>
-    .main {
-        width: 500px;
-        height: 500px;
-        border: 1px solid #000;
+    .home-admin {
+        height: 100%;
+    }
+    .pie, .bar, .line {
+        width: 400px;
+        height: 400px;
+        // border: 1px solid #000;
     }
 </style>
 

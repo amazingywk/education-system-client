@@ -27,6 +27,14 @@ export function disableOneUser(data) {
     })
 }
 
+// 根据用户_id查询用户信息
+export function getUserInfo(_id) {
+    return http({
+        url: `/user-information/${_id}`,
+        method: 'GET',
+    })
+}
+
 // 获取学生列表
 export function queryStudentList() {
     return http({

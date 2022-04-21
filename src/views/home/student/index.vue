@@ -1,33 +1,40 @@
 <template>
     <div class="home-student">
         <navbar />
-        学生主页
+        <postcard />
     </div>
 </template>
 
 <script>
-import { defineComponent, onBeforeMount } from 'vue'
+import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
 import Navbar from '@/components/navbar.vue'
 import storage from '@/utils/storage'
 import { getStudentTimetable } from '@/api/user'
+import Postcard from '@/components/postcard.vue'
 
 export default defineComponent({
     name:'HomeStudent',
 
     components:{
-        Navbar
+        Navbar,
+        Postcard
     },
 
     setup() {
+
+        const state = reactive({
+            
+        })
 
         onBeforeMount(async () => {
             const user = storage.getUser()
             const { data } = await getStudentTimetable(user._id)
             console.log(data)
+
         })
 
         return {
-            
+            ...toRefs(state),
         }
     },
 })

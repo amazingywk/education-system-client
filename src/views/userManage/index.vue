@@ -43,7 +43,7 @@
                     <a-select-option value="recruiter">招生管理员</a-select-option>
                     <a-select-option value="teacher">教师</a-select-option>
                     <a-select-option value="student">学生</a-select-option>
-                    <a-select-option value="visitor">游客</a-select-option>
+                    <a-select-option value="guest">游客</a-select-option>
                 </a-select>
             </div>
             <a-table

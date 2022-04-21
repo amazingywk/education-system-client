@@ -88,7 +88,7 @@ export default defineComponent({
 
         async function getAuthority () {
             const user = storage.getUser()
-            if (user) {
+            if (user._id) {
                 const { data } = await queryAuthority(user._id)
                 switch(data.role) {
                     case 'admin' :
@@ -107,6 +107,7 @@ export default defineComponent({
                         state.list = recruiterAuthority;
                 }
             } else {
+                message.error('没有权限，请登录')
                 router.push('/post')
             }
         }
