@@ -26,11 +26,27 @@ const config = {
             key: 'class-manage',
             title: '班级管理',
         },
+        {
+            key: 'paper-manage',
+            title: '试卷管理',
+        },
+        {
+            key: 'problem-manage',
+            title: '题库管理',
+        },
+        {
+            key: 'test-manage',
+            title: '综合测评',
+        },
     ],
     studentAuthority: [
         {
             key: 'home-student',
             title: '主页'
+        },
+        {
+            key: 'test-manage',
+            title: '综合测评',
         },
     ],
     teacherAuthority: [
@@ -42,6 +58,18 @@ const config = {
             key: 'class-manage',
             title: '班级管理',
         },
+        {
+            key: 'paper-manage',
+            title: '试卷管理',
+        },
+        {
+            key: 'problem-manage',
+            title: '题库管理',
+        },
+        {
+            key: 'test-manage',
+            title: '综合测评',
+        },
     ],
     recruiterAuthority: [
         {
@@ -52,11 +80,19 @@ const config = {
             key: 'recruit-manage',
             title: '招生管理',
         },
+        {
+            key: 'test-manage',
+            title: '综合测评',
+        },
     ],
     guestAuthority: [
         {
             key: 'home-guest',
             title: '主页'
+        },
+        {
+            key: 'test-manage',
+            title: '综合测评',
         },
     ],
 

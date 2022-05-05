@@ -57,6 +57,7 @@
                 :data-source="data"
                 rowKey="_id"
                 bordered
+                :pagination="{pageSize:7}"
             >
                 <template #action ="{ record }">
                     <a-button @click="changeVisible(record)">编辑</a-button>

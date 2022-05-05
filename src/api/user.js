@@ -9,6 +9,15 @@ export function queryUserList(data) {
     })
 }
 
+// 更新用户
+export function updateUser(data) {
+    return http({
+        url: '/user-update',
+        method: 'POST',
+        data,
+    })
+}
+
 // 启用用户
 export function enableOneUser(data) {
     return http({

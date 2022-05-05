@@ -1,6 +1,7 @@
 <template>
     <div class="user-manage">
         <navbar />
+        <editUser :editVisible="editVisible" :user="user" @fallback="fallback"/>
         <div class="content">
             <div class="parts-search">
                 搜索：
@@ -51,10 +52,11 @@
                 :data-source="data"
                 rowKey="_id"
                 bordered
+                :pagination="{pageSize:7}"
             >
                 <template #action ="{ record }">
-                    <a-button @click="changeUserState(record)">{{record.disabled?'启用':'禁用'}}</a-button>
-                    <a-button @click="changeUserState(record)">编辑</a-button>
+                    <a-button @click="changeUserState(record)" :type="record.disabled?'primary':'danger'">{{record.disabled?'启用':'禁用'}}</a-button>
+                    <a-button @click="changeVisible(record)" style="margin-left:20px">编辑</a-button>
                 </template>
                 <template #disabled="{ record }">
                     <span class="state-icon">
@@ -76,6 +78,7 @@
 <script>
 import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
 import Navbar from '@/components/navbar.vue'
+import EditUser from '@/components/editUser.vue'
 import { queryUserList, enableOneUser, disableOneUser } from '@/api/user.js'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -85,6 +88,7 @@ export default defineComponent({
 
     components: {
         Navbar,
+        EditUser,
         CheckCircleOutlined,
         CloseCircleOutlined,
     },
@@ -99,7 +103,9 @@ export default defineComponent({
                 gender: undefined,
                 role: undefined,
                 disabled: false,
-            }
+            },
+            user: {},
+            editVisible: false,
         })
 
         onBeforeMount(() => {
@@ -176,11 +182,23 @@ export default defineComponent({
             getUserList()
         }
 
+        const fallback = () => {
+            getUserList()
+            state.editVisible = false
+        }
+
+        const changeVisible = (record) => {
+            state.user = record
+            state.editVisible = !state.editVisible
+        }
+
         return {
             ...toRefs(state),
             columns,
             getUserList,
             changeUserState,
+            fallback,
+            changeVisible,
         }
     },
 })

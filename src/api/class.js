@@ -10,7 +10,7 @@ export function createClass(data) {
 }
 
 // 编辑班级
-export function UpdateClass(data) {
+export function updateClass(data) {
     return http({
         url: '/class-update',
         method: 'POST',

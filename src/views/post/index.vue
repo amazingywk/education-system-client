@@ -143,11 +143,11 @@ export default defineComponent({
 
         onBeforeMount(async () => {
             const user = storage.getUser()
-            if (user.length){
+            if (user._id){
                 try {
-                    await login(user)
-                    message.success('登录成功，正在跳转')
-                    router.push('/home')
+                    const { data } = await login(user)
+                    message.success('正在自动登录跳转')
+                    router.push('/home-'+data.role)
                 } catch (error) {
                     console.log(error)
                     storage.removeUser()

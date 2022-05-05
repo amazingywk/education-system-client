@@ -1,14 +1,19 @@
 <template>
     <div class="postcard">
+        <editUser :editVisible="editVisible" :user="user" @fallback="fallback"/>
         <div class="picture">
             <img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.51yuansu.com%2Fpic3%2Fcover%2F01%2F85%2F50%2F5981488bc465d_610.jpg&refer=http%3A%2F%2Fpic.51yuansu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653098396&t=737d8ed4a3095adc35c260cf25b00330" alt="">
         </div>
         <div class="username">{{ user.username }}</div>
         <div class="gender">性别：{{ user.gender === 'male'?'男':'女' }}</div>
         <div class="role">角色：{{ role }}</div>
-        <div class="phone">手机号：{{ user.phone?user.phone:'用户暂未填写'}}</div>
+        <div class="phone">手机号：{{ user.phone?user.phone:'用户暂未填写' }}</div>
+        <div class="role">
+            <span class="red" v-if="user.testScore===-1" @click="toTest">暂未做综合测评</span>
+            <span :class="user.testScore>59?'green':'red'" v-else @click="toTest">综合评测得分：{{ user.testScore }}</span>
+        </div>
         <div class="edit-button">
-            <a-button type="primary">
+            <a-button type="primary" @click="changeVisible()">
                 编辑
             </a-button>
         </div>
@@ -19,11 +24,19 @@
 import { getUserInfo } from '@/api/user'
 import storage from '@/utils/storage'
 import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import EditUser from './editUser.vue'
 
 export default defineComponent({
     name: 'POSTCARD',
 
+    components: {
+        EditUser
+    },
+
     setup() {
+
+        const router = useRouter()
 
         const state = reactive({
             user: {
@@ -33,9 +46,14 @@ export default defineComponent({
                 gender: undefined,
             },
             role: undefined,
+            editVisible: false,
         })
 
         onBeforeMount(async () => {
+            getUser()
+        })
+
+        async function getUser() {
             const user = storage.getUser()
             const { data } = await getUserInfo(user._id)
             state.user = data
@@ -56,10 +74,26 @@ export default defineComponent({
                     state.role = '招生管理员'
                     break
             }
-        })
+        }
+
+        const changeVisible = () => {
+            state.editVisible = !state.editVisible
+        }
+
+        const fallback = () => {
+            getUser()
+            state.editVisible = false
+        }
+
+        const toTest = () => {
+            router.push('/test-manage')
+        }
 
         return {
             ...toRefs(state),
+            changeVisible,
+            fallback,
+            toTest,
         }
     },
 })
@@ -89,6 +123,14 @@ export default defineComponent({
         }
         .gender, .role, .phone {
             margin-left: 40px;
+        }
+        .green {
+            cursor: pointer;
+            color: green;
+        }
+        .red {
+            cursor: pointer;
+            color: red;
         }
         .edit-button {
             width: 100%;

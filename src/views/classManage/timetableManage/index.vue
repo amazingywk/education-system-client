@@ -12,9 +12,23 @@
                 {{ data.teacher?.length?'班主任：'+data.teacher[1]:'暂未指定班主任' }}
             </div>
 
+            <div class="date">
+                <div></div>
+                <div>星期一</div>
+                <div>星期二</div>
+                <div>星期三</div>
+                <div>星期四</div>
+                <div>星期五</div>
+                <div>星期六</div>
+                <div>星期日</div>
+            </div>
+            <div class="time">
+                <div>上午</div>
+                <div>下午</div>
+            </div>
             <div class="schedule">
-                <div v-for="(course, index) in schedule" :key="course" class="course" @click="changeVisible(index, course)" >
-                    {{ course?.length?course[1]:'0' }}
+                <div v-for="(course, index) in schedule" :key="course" :class="course?.length?'green':'red'" @click="changeVisible(index, course)" >
+                    {{ course?.length?course[1]:'暂未选课' }}
                 </div>
             </div>
             <a-modal
@@ -151,22 +165,58 @@ export default defineComponent({
     width: 100%;
     height: 100%;
     .content {
-        width: 300px;
-        height: 200px;
-        margin: auto;
-        border: 1px solid #000;
+        width: 100%;
+        height: 100%;
+        padding-left: 20px;
+        .title {
+            font-size: 30px;
+            font-weight: 500;
+        }
+        .date {
+            display: flex;
+            position: relative;
+            left: 83px;
+            top: 49px;
+            div {
+                width: 150px;
+                text-align: center;
+                background-color: skyblue;
+                border:1px solid #000;
+            }
+        }
+        .time {
+            position: relative;
+            top: 49px;
+            left: 83px;
+            div {
+                width: 150px;
+                height: 200px;
+                text-align: center;
+                background-color: skyblue;
+                border: 1px solid #000;
+            }
+        }
         .schedule {
+            position: relative;
             display: flex;
             box-sizing: border-box;
             flex-wrap: wrap;
-            width: 702px;
+            top: -351px;
+            width: 1052px;
             height: 400px;
-            border: 1px solid red;
-            .course {
+            margin: 0 auto;
+            // border: 1px solid red;
+            .course, .green, .red {
                 box-sizing: border-box;
-                width: 100px;
-                height: 30px;
+                width: 150px;
+                height: 100px;
                 border: 1px solid #000;
+            }
+            .green {
+                color: green;
+            }
+            .red {
+                color: red;
             }
         }
     }

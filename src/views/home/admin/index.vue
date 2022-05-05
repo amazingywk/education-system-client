@@ -2,10 +2,13 @@
     <div class="home-admin">
         <navbar />
         <postcard />
-        <div style="display: flex;">
-            <div class="pie" ref="pieRef"></div>
+        <div style="display: flex; justify-content: space-between;padding: 20px 120px">
+            <div class="pie" ref="pie2Ref"></div>
             <div class="bar" ref="barRef"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between;padding: 20px 120px">
             <div class="line" ref="lineRef"></div>
+            <div class="pie" ref="pieRef"></div>
         </div>
     </div>
 </template>
@@ -28,6 +31,7 @@ export default defineComponent({
 
     setup() {
         const pieRef = ref()
+        const pie2Ref = ref()
         const barRef = ref()
         const lineRef = ref()
 
@@ -54,14 +58,18 @@ export default defineComponent({
             state.data = { teacher, student, guest, classNum, course }
 
             const pieChart = echarts.init(pieRef.value)
+            const pie2Chart = echarts.init(pie2Ref.value)
             const barChart = echarts.init(barRef.value)
             const lineChart = echarts.init(lineRef.value)
 
             const pie = {
+                title: {
+                    text: '人员分布'
+                },
                 series: [
                     {
                         type: 'pie',
-                        name: 'a',
+                        name: '人员分布图',
                         data: [
                             {
                                 value: teacher,
@@ -76,7 +84,7 @@ export default defineComponent({
                                 name: '游客（'+guest+'）'
                             },
                         ],
-                        radius: '50%',
+                        radius: '40%',
                     },
                 ]
             }
@@ -98,6 +106,9 @@ export default defineComponent({
                 ]
             }
             const line = {
+                title: {
+                    text: '系统发展'
+                },
                 xAxis: {
                     data: ['A', 'B', 'C', 'D', 'E']
                 },
@@ -117,7 +128,34 @@ export default defineComponent({
                     }
                 ]
             }
+            const pie2 = {
+                title: {
+                    text: '综合评测统计'
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        name: 'a',
+                        data: [
+                            {
+                                value: teacher,
+                                name: '优秀（'+teacher+'）'
+                            },
+                            {
+                                value: student,
+                                name: '一般（'+student+'）'
+                            },
+                            {
+                                value: guest,
+                                name: '不及格（'+guest+'）'
+                            },
+                        ],
+                        radius: '40%',
+                    },
+                ]
+            }
             pieChart.setOption(pie)
+            pie2Chart.setOption(pie2)
             barChart.setOption(bar)
             lineChart.setOption(line)
         })
@@ -125,6 +163,7 @@ export default defineComponent({
         return {
             ...toRefs(state),
             pieRef,
+            pie2Ref,
             barRef,
             lineRef,
         }
@@ -137,10 +176,13 @@ export default defineComponent({
         height: 100%;
     }
     .pie, .bar, .line {
-        width: 400px;
-        height: 400px;
+        width: 300px;
+        height: 300px;
         // border: 1px solid #000;
     }
+    // .line {
+    //     margin-left: 150px;
+    // }
 </style>
 
 

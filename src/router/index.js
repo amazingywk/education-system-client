@@ -55,6 +55,30 @@ export const allRoutes = [
         name: 'HomeGuest',
         component: () => import('@/views/home/guest'),
     },
+    {
+        path: '/paper-manage',
+        redirect: '/paper-manage/details',
+    },
+    {
+        path: '/paper-manage/details',
+        name: 'PaperDetails',
+        component: () => import('@/views/paperManage/details')
+    },
+    {
+        path: '/paper-manage/add',
+        name: 'PaperAdd',
+        component: () => import('@/views/paperManage/add')
+    },
+    {
+        path: '/problem-manage',
+        name: 'ProblemManage',
+        component: () => import('@/views/problemManage')
+    },
+    {
+        path: '/test-manage',
+        name: 'TestManage',
+        component: () => import('@/views/testManage')
+    },
 ]
 
 const router = createRouter({

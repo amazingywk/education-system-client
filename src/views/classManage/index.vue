@@ -68,6 +68,7 @@
                 :data-source="data"
                 rowKey="_id"
                 bordered
+                :pagination="{pageSize:7}"
             >
                 <template #action ="{ record }">
                     <a-button @click="changeVisible(record)">编辑</a-button>
@@ -91,7 +92,7 @@
 <script>
 import { defineComponent, reactive, onBeforeMount, toRefs } from 'vue'
 import NavBar from '@/components/navbar.vue'
-import { queryClassList, createClass, UpdateClass  } from '@/api/class'
+import { queryClassList, createClass, updateClass  } from '@/api/class'
 import { queryStudentList, queryTeacherList } from '@/api/user'
 import _ from 'lodash'
 import { useRouter } from 'vue-router'
@@ -222,7 +223,7 @@ export default defineComponent({
                 .then(async () => {
                     // 编辑
                     if (state.isEdit){
-                        await UpdateClass(state.formState)
+                        await updateClass(state.formState)
                         message.success('编辑班级成功')
                     }else {
                         // 新增班级
