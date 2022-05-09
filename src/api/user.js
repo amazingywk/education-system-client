@@ -18,6 +18,15 @@ export function updateUser(data) {
     })
 }
 
+// 招生
+export function changeGuestToStudent(data) {
+    return http({
+        url: '/guest-student',
+        method: 'POST',
+        data
+    })
+}
+
 // 启用用户
 export function enableOneUser(data) {
     return http({

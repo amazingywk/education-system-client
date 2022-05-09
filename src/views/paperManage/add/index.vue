@@ -22,7 +22,11 @@
         <div class="paper-title">
             试卷题目：<input v-model="data.papername" @keyup="change()" class="input"/>
         </div>
-        <problemCard v-for="(problem, index) in problemList" :key="index" :problem="problem" :index="index"/>
+        <div v-for="(problem, index) in problemList" :key="index">
+            <problemCard :problem="problem" :index="index"/>
+            <a-button style="margin: -35px 0 30px 150px;" danger @click="deleteOne(index)">删除该题</a-button>
+        </div>
+        
         <div v-if="addVisible" class="problem-select">
             <a-select
                 v-model:value="selected"
@@ -103,8 +107,7 @@ export default defineComponent({
             state.problems.map(async problem => {
                 const { data } = await getProblemInfo(problem)
                 state.problemList.push(data)
-            })
-            
+            })  
         }
 
         const getProblemList = async () => {
@@ -128,6 +131,13 @@ export default defineComponent({
             await arrangeProblem()
             state.addVisible = false
             state.selected = undefined
+            message.success('添加成功')
+        }
+
+        const deleteOne = (index) => {
+            state.problems.splice(index,1)
+            state.problemList.splice(index,1)
+            message.success('删除成功')
         }
 
         const submit = async() => {
@@ -160,6 +170,7 @@ export default defineComponent({
             getProblemList,
             changeAddVisible,
             addProblem,
+            deleteOne,
             submit,
             change,
         }

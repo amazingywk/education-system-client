@@ -39,12 +39,11 @@
                     <a-form-item ref="number" label="班级编号" name="number" >
                         <a-input v-model:value="formState.number" placeholder="请输入班级编号" />
                     </a-form-item>
-                    <a-form-item label="班主任" style="margin-left: 11px;">
+                    <a-form-item label="班主任" style="margin-left: 26px;">
                         <a-select
                             v-model:value="selectTeacher"
                             show-search
                             placeholder="请选择班主任"
-                            style="width: 200px"
                             :options="teacherOptions"
                             @change="teacherChange"
                         >
@@ -56,7 +55,6 @@
                             show-search
                             mode="multiple"
                             placeholder="选择一到多名学生"
-                            style="width: 200px"
                             :options="options"
                         >
                         </a-select>
@@ -72,7 +70,7 @@
             >
                 <template #action ="{ record }">
                     <a-button @click="changeVisible(record)">编辑</a-button>
-                    <a-button @click="toTimetable(record)">课表</a-button>
+                    <a-button @click="toTimetable(record)" type="primary" style="margin-left: 20px;">课表</a-button>
                 </template>
                 <template #teacher ="{ record }">
                     {{ record.teacher?record.teacher[1]:'-' }}

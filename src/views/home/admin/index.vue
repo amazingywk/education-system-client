@@ -51,11 +51,11 @@ export default defineComponent({
 
         onMounted(async () => {
 
-            const { data: { teacher, student, guest } } = await getUserNum()
+            const { data: { people: { teacher, student, guest }, test: { fail, not, pass } } } = await getUserNum()
             const { data: { classNum, course } } = await getSystemNum()
 
-
             state.data = { teacher, student, guest, classNum, course }
+            console.log(not,pass,fail)
 
             const pieChart = echarts.init(pieRef.value)
             const pie2Chart = echarts.init(pie2Ref.value)
@@ -73,15 +73,15 @@ export default defineComponent({
                         data: [
                             {
                                 value: teacher,
-                                name: '教师（'+teacher+'）'
+                                name: '教师('+teacher+')'
                             },
                             {
                                 value: student,
-                                name: '学生（'+student+'）'
+                                name: '学生('+student+')'
                             },
                             {
                                 value: guest,
-                                name: '游客（'+guest+'）'
+                                name: '游客('+guest+')'
                             },
                         ],
                         radius: '40%',
@@ -138,16 +138,16 @@ export default defineComponent({
                         name: 'a',
                         data: [
                             {
-                                value: teacher,
-                                name: '优秀（'+teacher+'）'
+                                value: fail,
+                                name: '未通过('+fail+')'
                             },
                             {
-                                value: student,
-                                name: '一般（'+student+'）'
+                                value: pass,
+                                name: '通过('+pass+')'
                             },
                             {
-                                value: guest,
-                                name: '不及格（'+guest+'）'
+                                value: not,
+                                name: '未做('+not+')'
                             },
                         ],
                         radius: '40%',

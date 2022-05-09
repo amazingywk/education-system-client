@@ -27,6 +27,22 @@ export function queryPaperList(data) {
     })
 }
 
+// 获取试卷可选项
+export function getPaperOptions() {
+    return http({
+        url: '/paper-options',
+        method: 'GET'
+    })
+}
+
+// 获取综合测评试卷
+export function getTestPaper() {
+    return http({
+        url: '/paper-test',
+        method: 'GET'
+    })
+}
+
 // 根据班级_id获取信息与课表信息
 export function getPaperInfo(_id) {
     return http({

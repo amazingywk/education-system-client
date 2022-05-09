@@ -28,10 +28,11 @@
 import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
 import Navbar from '@/components/navbar.vue'
 import ProblemCard from '@/components/problemCard.vue'
-import { submitTestScore } from '@/api/problem'
+import { getProblemInfo, submitTestScore } from '@/api/problem'
 import storage from '@/utils/storage'
 import { getUserInfo } from '@/api/user'
 import { message } from 'ant-design-vue'
+import { getTestPaper } from '@/api/paper'
 
 export default defineComponent({
     name:'TestManage',
@@ -93,6 +94,7 @@ export default defineComponent({
             if (testScore===-1) {
                 state.retest = false
                 state.reset = false
+                await getPaper()
             } else {
                 state.retest = true
                 state.reset = true
@@ -104,9 +106,26 @@ export default defineComponent({
             }
         })
 
+        async function getPaper() {
+            const { data } = await getTestPaper()
+
+            state.data = []
+            data.problems.map(async problem => {
+                const { data } = await getProblemInfo(problem)
+                state.data.push(data)
+            })
+        }
+
         const submit = async () => {
             state.read = true
-            const { data } = await submitTestScore({ _id, answer: state.answer })
+            let num = 0
+            for(let i=0; i<state.data.length; i++) {
+                if (state.answer[i] == state.data[i].answer) {
+                    num++
+                }
+            }
+            let score = 100/state.data.length*num
+            const { data } = await submitTestScore({ _id, score })
             state.score = data.score
             if (data.score>59) {
                 message.success('真不错，您的得分为'+data.score+'！')
@@ -116,10 +135,12 @@ export default defineComponent({
             state.reset = true
         }
 
-        const resetPage = () => {
+        const resetPage = async () => {
             state.retest = false
             state.reset = false
             state.read = false
+
+            await getPaper()
         }
 
         const changeAnswer = (index, value) => {

@@ -13,7 +13,7 @@
             您的答案为：
             <input v-model="answer" @keyup="change"/>
             <span v-if="read">
-                <CheckOutlined style="color: green; fontSize: 40px" v-if="answer===problem.answer"/>
+                <CheckOutlined style="color: green; fontSize: 40px" v-if="answer==problem.answer"/>
                 <CloseOutlined style="color: red; fontSize: 40px" v-else/>
             </span>
         </div>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent({
@@ -47,10 +47,6 @@ export default defineComponent({
             answer: undefined,
         })
 
-        onBeforeMount(() => {
-            console.log(props)
-        })
-
         const change = () => {
             emit('changeAnswer',props.index,state.answer)
         }
@@ -73,7 +69,7 @@ export default defineComponent({
     .card {
         min-width: 500px;
         min-height: 100px;
-        margin: 30px 0;
+        margin: 30px 150px;
         .card-title {
             font-size: 20px;
             font-weight: 500;

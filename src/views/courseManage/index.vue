@@ -44,7 +44,6 @@
                             v-model:value="selectTeacher"
                             show-search
                             placeholder="请选择代课老师"
-                            style="width: 200px"
                             :options="options"
                             @change="teacherChange"
                         >

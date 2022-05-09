@@ -55,8 +55,11 @@
                 :pagination="{pageSize:7}"
             >
                 <template #action ="{ record }">
-                    <a-button @click="changeUserState(record)" :type="record.disabled?'primary':'danger'">{{record.disabled?'启用':'禁用'}}</a-button>
+                    <a-button @click="changeUserState(record)" type="primary" :danger="record.disabled?true:false">{{record.disabled?'启用':'禁用'}}</a-button>
                     <a-button @click="changeVisible(record)" style="margin-left:20px">编辑</a-button>
+                </template>
+                <template #gender ="{ record }">
+                    {{record.gender==='female'?'女':'男'}}
                 </template>
                 <template #disabled="{ record }">
                     <span class="state-icon">
@@ -127,7 +130,10 @@ export default defineComponent({
             {
                 title: '性别',
                 width: 100,
-                dataIndex: 'gender',
+                // dataIndex: 'gender',
+                slots: {
+                    customRender: 'gender',
+                },
                 key: 'age',
                 fixed: 'left',
             },
@@ -164,19 +170,11 @@ export default defineComponent({
 
         const changeUserState = async (user) => {
             if ( user.disabled ){
-                const { data } = await enableOneUser({ _id: user._id })
-                if (data.status === 1){
-                    message.success('启用该用户成功')
-                } else {
-                    message.error('操作失败，请重试')
-                }
+                await enableOneUser({ _id: user._id })
+                message.success('启用该用户成功')
             } else {
-                const { data } = await disableOneUser({ _id: user._id })
-                if (data.status === 1){
-                    message.success('禁用该用户成功')
-                } else {
-                    message.error('操作失败，请重试')
-                }
+                await disableOneUser({ _id: user._id })
+                message.success('禁用该用户成功')
             }
 
             getUserList()

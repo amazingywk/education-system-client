@@ -67,7 +67,11 @@ export default defineComponent({
             await getAuthority()
 
             let path = router.currentRoute.value.path
-            state.selectedKeys.push(path.slice(1))
+            if (path.startsWith('/paper-manage')) {
+                state.selectedKeys.push('paper-manage')
+            } else {
+                state.selectedKeys.push(path.slice(1))
+            }
 
             state.username = storage.getUser().username
             
@@ -83,6 +87,9 @@ export default defineComponent({
             }
             if (path.startsWith('/home')) {
                 state.currentTitle = '主页'
+            }
+            if (path.startsWith('/paper-manage')) {
+                state.currentTitle = '试卷管理'
             }
         })
 

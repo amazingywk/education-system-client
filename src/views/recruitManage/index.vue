@@ -10,15 +10,6 @@
                     @pressEnter="getUserList"
                     width="300px"
                 ></a-input>
-                <a-select
-                    v-model:value="search.disabled"
-                    @change="getUserList"
-                    placeholder="状态"
-                >
-                    <a-select-option :value="null">全部</a-select-option>
-                    <a-select-option :value="false">已通过</a-select-option>
-                    <a-select-option :value="true">未通过</a-select-option>
-                </a-select>
                 <a-input
                     v-model:value="search.phone"
                     placeholder="手机号"
@@ -34,17 +25,6 @@
                     <a-select-option value="male">男</a-select-option>
                     <a-select-option value="female">女</a-select-option>
                 </a-select>
-                <a-select
-                    v-model:value="search.role"
-                    @change="getUserList"
-                    placeholder="角色"
-                >
-                    <a-select-option :value="null">全部</a-select-option>
-                    <a-select-option value="recruiter">招生管理员</a-select-option>
-                    <a-select-option value="teacher">教师</a-select-option>
-                    <a-select-option value="student">学生</a-select-option>
-                    <a-select-option value="guest">游客</a-select-option>
-                </a-select>
             </div>
             <a-table
                 :columns="columns"
@@ -54,20 +34,14 @@
                 :pagination="{pageSize:7}"
             >
                 <template #action ="{ record }">
-                    <a-button @click="changeUserState(record)" :type="record.disabled?'primary':'danger'">{{record.disabled?'通过':'移除'}}</a-button>
-                    <a-button @click="changeVisible(record)" style="margin-left:20px">编辑</a-button>
-                </template>
-                <template #disabled="{ record }">
-                    <span class="state-icon">
-                        <template v-if="record.disabled === false">
-                            <CheckCircleOutlined style="color: green" />
-                            已通过
-                        </template>
-                        <template v-else>
-                            <CloseCircleOutlined style="color: red" />
-                            未通过
-                        </template>
-                    </span>
+                    <a-popconfirm
+                        title="确定要通过该用户吗"
+                        ok-text="确定"
+                        cancel-text="再想想"
+                        @confirm="confirm(record)"
+                    >
+                        <a-button type="primary">通过</a-button>
+                    </a-popconfirm>
                 </template>
             </a-table>
         </div>
@@ -77,8 +51,7 @@
 <script>
 import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
 import Navbar from '@/components/navbar.vue'
-import { queryUserList, enableOneUser, disableOneUser } from '@/api/user.js'
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
+import { changeGuestToStudent, queryUserList } from '@/api/user.js'
 import { message } from 'ant-design-vue';
 
 export default defineComponent({
@@ -86,20 +59,16 @@ export default defineComponent({
 
     components: {
         Navbar,
-        CheckCircleOutlined,
-        CloseCircleOutlined,
     },
 
     setup() {
 
         const state = reactive({
-            data: undefined, // table表格数据
+            data: [], // table表格数据
             search: {
                 username: undefined,
                 phone: undefined,
                 gender: undefined,
-                role: undefined,
-                disabled: null,
             },
             user: {},
             editVisible: false,
@@ -135,14 +104,6 @@ export default defineComponent({
                 fixed: 'left',
             },
             {
-                title: '状态',
-                slots: {
-                    customRender: 'disabled',
-                },
-                width: 100,
-                fixed: 'left',
-            },
-            {
                 title: '操作',
                 key: 'operation',
                 fixed: 'right',
@@ -154,40 +115,27 @@ export default defineComponent({
         ]
 
         const getUserList = async () => {
+            state.data = []
             const { data } = await queryUserList(state.search)
-            console.log(data)
-            state.data = data
+            data.map(user => {
+                if (user.role === 'guest') {
+                    state.data.push(user)
+                }
+            })
         }
 
-        const changeUserState = async (user) => {
-            if ( user.disabled ){
-                await enableOneUser({ _id: user._id })
-                message.success('启用该用户成功')
-            } else {
-                await disableOneUser({ _id: user._id })
-                message.success('禁用该用户成功')
-            }
+        const confirm = async (guest) => {
+            await changeGuestToStudent(guest)
+            message.success('操作成功')
 
             getUserList()
-        }
-
-        const fallback = () => {
-            getUserList()
-            state.editVisible = false
-        }
-
-        const changeVisible = (record) => {
-            state.user = record
-            state.editVisible = !state.editVisible
         }
 
         return {
             ...toRefs(state),
             columns,
             getUserList,
-            changeUserState,
-            fallback,
-            changeVisible,
+            confirm
         }
     },
 })

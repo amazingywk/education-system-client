@@ -27,6 +27,15 @@ export function queryClassList(data) {
     })
 }
 
+// 给班级添加一份试卷
+export function changeClassPaper(data) {
+    return http({
+        url: '/class-paper',
+        method: 'POST',
+        data
+    })
+}
+
 // 根据班级_id获取信息与课表信息
 export function classInfo(_id) {
     return http({
